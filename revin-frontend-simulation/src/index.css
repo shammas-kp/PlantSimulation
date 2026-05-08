@@ -1,0 +1,925 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #0f9f98;
+  --color-primary-dark: #0a766f;
+  --color-secondary: #1f2a44;
+  --color-accent: #8fbe22;
+  --color-background: #f5f7f2;
+  --color-surface: #ffffff;
+  --color-surface-soft: #eef6e8;
+  --color-card: #ffffff;
+  --color-border: #dfe7dc;
+  --color-muted: #667085;
+  --color-danger: #dc2626;
+  --color-warning: #d97706;
+  --color-success: #16a34a;
+  --color-soil: #7a4a24;
+  --color-leaf: #1f9d55;
+  --color-leaf-light: #9ad84f;
+  --shadow-card: 0 18px 45px rgba(31, 42, 68, 0.09);
+  --shadow-soft: 0 10px 28px rgba(15, 159, 152, 0.14);
+  --shadow-plant: 0 22px 42px rgba(31, 42, 68, 0.16);
+  --radius-card: 8px;
+  --radius-control: 8px;
+}
+
+body {
+  background-color: var(--color-background);
+  font-family: Inter, sans-serif;
+  color: var(--color-secondary);
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.animate-panel-in {
+  animation: panel-in 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-soft-float {
+  animation: soft-float 3.6s ease-in-out infinite;
+}
+
+.animate-grow-in {
+  animation: grow-in 900ms cubic-bezier(0.2, 0.9, 0.2, 1) both;
+}
+
+.animate-shimmer {
+  animation: shimmer 1.3s linear infinite;
+  background: linear-gradient(
+    90deg,
+    rgba(238, 246, 232, 0.65),
+    rgba(255, 255, 255, 0.95),
+    rgba(238, 246, 232, 0.65)
+  );
+  background-size: 220% 100%;
+}
+
+.plant-visual {
+  --plant-height: 70px;
+  --leaf-scale: 1;
+  --plant-sway: 2.5deg;
+  --leaf-droop: 0deg;
+  --leaf-drop: 0px;
+  --stage-opacity-leaves: 1;
+  --stage-opacity-flower: 0;
+  --stage-opacity-seed: 0;
+  filter: drop-shadow(var(--shadow-plant));
+  height: 188px;
+  margin-top: 34px;
+  position: relative;
+  width: 210px;
+  z-index: 3;
+}
+
+.plant-scene {
+  align-items: center;
+  background:
+    linear-gradient(180deg, var(--scene-sky, #dff5ff), #eef6e8 74%),
+    linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.4));
+  border: 1px solid rgba(223, 231, 220, 0.9);
+  border-radius: var(--radius-card);
+  display: flex;
+  height: 292px;
+  justify-content: center;
+  overflow: hidden;
+  position: relative;
+  width: min(100%, 420px);
+}
+
+.sun-low {
+  --scene-sky: #dce6ea;
+  --sun-alpha: 0.38;
+  --sun-size: 54px;
+}
+
+.sun-medium {
+  --scene-sky: #dff5ff;
+  --sun-alpha: 0.72;
+  --sun-size: 68px;
+}
+
+.sun-high {
+  --scene-sky: #ffe8a6;
+  --sun-alpha: 0.95;
+  --sun-size: 82px;
+}
+
+.water-low {
+  --soil-color: #b98249;
+  --soil-crack-alpha: 0.42;
+  --rain-alpha: 0;
+}
+
+.water-medium {
+  --soil-color: #7f5a31;
+  --soil-crack-alpha: 0;
+  --rain-alpha: 0.34;
+}
+
+.water-high {
+  --soil-color: #55412c;
+  --soil-crack-alpha: 0;
+  --rain-alpha: 0.8;
+}
+
+.scene-sun {
+  animation: sun-pulse 3.4s ease-in-out infinite;
+  background: radial-gradient(circle, #ffd66b 0 45%, rgba(255, 214, 107, 0.2) 68%, transparent 70%);
+  height: var(--sun-size, 68px);
+  opacity: var(--sun-alpha, 0.72);
+  position: absolute;
+  right: 26px;
+  top: 24px;
+  width: var(--sun-size, 68px);
+}
+
+.scene-cloud {
+  background: rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  height: 28px;
+  left: 32px;
+  position: absolute;
+  top: 38px;
+  width: 86px;
+}
+
+.scene-cloud::before,
+.scene-cloud::after {
+  background: inherit;
+  border-radius: inherit;
+  content: "";
+  position: absolute;
+}
+
+.scene-cloud::before {
+  height: 42px;
+  left: 16px;
+  top: -18px;
+  width: 42px;
+}
+
+.scene-cloud::after {
+  height: 34px;
+  right: 14px;
+  top: -12px;
+  width: 34px;
+}
+
+.scene-rain {
+  animation: rain-drop 1.15s linear infinite;
+  background: rgba(15, 159, 152, var(--rain-alpha, 0.34));
+  border-radius: 999px;
+  height: 40px;
+  left: 72px;
+  position: absolute;
+  top: 78px;
+  width: 4px;
+}
+
+.water-high .scene-rain {
+  height: 54px;
+}
+
+.water-high .rain-two {
+  animation-duration: 920ms;
+}
+
+.rain-two {
+  animation-delay: 320ms;
+  left: 100px;
+  top: 66px;
+}
+
+.scene-soil {
+  background:
+    linear-gradient(125deg, transparent 0 18%, rgba(68, 43, 22, var(--soil-crack-alpha, 0)) 18% 20%, transparent 20% 100%),
+    linear-gradient(35deg, transparent 0 62%, rgba(68, 43, 22, var(--soil-crack-alpha, 0)) 62% 64%, transparent 64% 100%),
+    radial-gradient(ellipse at 50% 0, rgba(255, 255, 255, 0.12), transparent 44%),
+    linear-gradient(180deg, var(--soil-color, #7f5a31), #4a2f18);
+  bottom: 0;
+  height: 44px;
+  left: 0;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+}
+
+.plant-svg {
+  --plant-sway: 2.5deg;
+  --leaf-scale: 1;
+  --color-leaf: #1f9d55;
+  --color-leaf-light: #9ad84f;
+  animation: svg-plant-rise 620ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  height: 248px;
+  margin-top: 22px;
+  overflow: visible;
+  position: relative;
+  transform-origin: 160px 220px;
+  width: min(88%, 330px);
+  z-index: 3;
+}
+
+.plant-svg-main-stem,
+.plant-svg-branch {
+  animation: svg-stem-sway 3.6s ease-in-out infinite;
+  fill: none;
+  stroke: var(--color-leaf);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 11;
+  transform-box: fill-box;
+  transform-origin: bottom center;
+}
+
+.plant-svg-branch {
+  animation: none;
+  opacity: 0.95;
+  stroke-width: 7;
+}
+
+.plant-svg-leaf {
+  animation: svg-leaf-breathe 3.2s ease-in-out infinite;
+  fill: var(--color-leaf);
+  filter: drop-shadow(0 6px 8px rgba(31, 42, 68, 0.12));
+  stroke: rgba(255, 255, 255, 0.34);
+  stroke-width: 2;
+  transform-box: fill-box;
+  transform-origin: 0 50%;
+}
+
+.leaf-right-main,
+.leaf-left-main,
+.leaf-top {
+  fill: var(--color-leaf-light);
+}
+
+.leaf-left-lower,
+.leaf-right-lower {
+  fill: var(--color-leaf);
+}
+
+.plant-svg-soil {
+  fill: #6b421f;
+  filter: drop-shadow(0 12px 14px rgba(51, 31, 14, 0.22));
+}
+
+.plant-svg-shadow {
+  fill: rgba(31, 42, 68, 0.13);
+  filter: blur(3px);
+}
+
+.plant-svg-root {
+  fill: none;
+  opacity: 0;
+  stroke: rgba(238, 203, 142, 0.72);
+  stroke-linecap: round;
+  stroke-width: 4;
+}
+
+.plant-svg-flower {
+  fill: #f29ac0;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.leaf-node {
+  animation: svg-node-breathe 3.4s ease-in-out infinite;
+  transform-box: fill-box;
+  transform-origin: 0 0;
+}
+
+.node-left-main,
+.node-right-main {
+  animation-delay: 160ms;
+}
+
+.node-left-lower,
+.node-right-lower {
+  animation-delay: 320ms;
+}
+
+.flower-center {
+  fill: #f3c648;
+}
+
+.plant-svg-spots {
+  fill: rgba(104, 74, 32, 0.72);
+}
+
+.plant-svg-falling path {
+  animation: svg-leaf-fall 3s ease-in-out infinite;
+  fill: #c7a33a;
+  opacity: 0;
+}
+
+.plant-svg-falling .falling-b {
+  animation-delay: 900ms;
+}
+
+.plant-svg.stage-seedling {
+  scale: 0.74;
+}
+
+.plant-svg.stage-seedling .plant-svg-root {
+  opacity: 1;
+}
+
+.plant-svg.stage-seedling .node-right-main,
+.plant-svg.stage-seedling .node-left-lower,
+.plant-svg.stage-seedling .node-right-lower,
+.plant-svg.stage-seedling .leaf-right-main,
+.plant-svg.stage-seedling .leaf-left-lower,
+.plant-svg.stage-seedling .leaf-right-lower,
+.plant-svg.stage-seedling .plant-svg-flower {
+  opacity: 0;
+}
+
+.plant-svg.stage-young {
+  scale: 0.86;
+}
+
+.plant-svg.stage-young .node-right-lower,
+.plant-svg.stage-young .leaf-right-lower,
+.plant-svg.stage-young .plant-svg-flower {
+  opacity: 0;
+}
+
+.plant-svg.stage-growing {
+  scale: 1;
+}
+
+.plant-svg.stage-growing .flower-b {
+  opacity: 0.55;
+}
+
+.plant-svg.stage-mature {
+  scale: 1.04;
+}
+
+.plant-svg.stage-mature .plant-svg-flower {
+  animation: flower-pop 2.8s ease-in-out infinite;
+  opacity: 1;
+}
+
+.plant-svg.is-dry,
+.plant-svg.is-diseased,
+.plant-svg.is-critical {
+  --color-leaf: #9c8c2f;
+  --color-leaf-light: #d8ca51;
+}
+
+.plant-svg.is-dry .plant-svg-leaf,
+.plant-svg.is-diseased .plant-svg-leaf,
+.plant-svg.is-critical .plant-svg-leaf {
+  filter: saturate(0.75) drop-shadow(0 6px 8px rgba(31, 42, 68, 0.14));
+}
+
+.plant-svg.is-dry .leaf-left-main,
+.plant-svg.is-dry .leaf-right-main,
+.plant-svg.is-diseased .leaf-left-main,
+.plant-svg.is-diseased .leaf-right-main {
+  transform: rotate(12deg) translateY(8px);
+}
+
+.plant-svg.is-overwatered .plant-svg-leaf {
+  filter: brightness(0.9) saturate(0.78);
+  transform: translateY(8px) scaleY(0.94);
+}
+
+.plant-svg.is-critical .plant-svg-main-stem,
+.plant-svg.is-critical .plant-svg-branch {
+  stroke: #8a8d32;
+}
+
+.plant-svg.is-critical .plant-svg-leaf {
+  opacity: 0.68;
+  transform: rotate(18deg) translateY(15px);
+}
+
+
+.plant-visual::before {
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(255, 255, 255, 0.14), transparent 38%),
+    linear-gradient(180deg, #9b632f, #5b371c);
+  border-radius: 54% 46% 42% 42%;
+  bottom: 22px;
+  box-shadow:
+    inset 0 12px 22px rgba(255, 255, 255, 0.16),
+    inset 0 -10px 18px rgba(72, 38, 16, 0.28);
+  content: "";
+  height: 36px;
+  left: 44px;
+  position: absolute;
+  width: 122px;
+  z-index: 2;
+}
+
+.plant-visual::after {
+  animation: stem-sway 3.8s ease-in-out infinite;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.22), transparent 40%),
+    linear-gradient(180deg, var(--color-leaf-light), var(--color-leaf));
+  border-radius: 999px 999px 6px 6px;
+  bottom: 48px;
+  content: "";
+  height: var(--plant-height, 60px);
+  left: 104px;
+  position: absolute;
+  transform: translateX(-50%) rotate(0deg);
+  transform-origin: bottom;
+  width: 12px;
+  z-index: 4;
+}
+
+.plant-visual.stage-seedling {
+  --plant-height: 34px;
+  --leaf-scale: 0.58;
+  --stage-opacity-flower: 0;
+  --stage-opacity-seed: 1;
+}
+
+.plant-visual.stage-young {
+  --leaf-scale: 0.78;
+  --stage-opacity-flower: 0;
+  --stage-opacity-seed: 0.25;
+}
+
+.plant-visual.stage-growing {
+  --leaf-scale: 1;
+  --stage-opacity-flower: 0.25;
+}
+
+.plant-visual.stage-mature {
+  --leaf-scale: 1.14;
+  --stage-opacity-flower: 1;
+}
+
+.plant-visual.is-dry::after,
+.plant-visual.is-critical::after {
+  filter: saturate(0.72);
+}
+
+.plant-visual.is-overwatered::after {
+  filter: saturate(0.85) brightness(0.9);
+}
+
+.plant-leaf {
+  animation: leaf-breathe 3.2s ease-in-out infinite;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.25), transparent 35%),
+    linear-gradient(135deg, var(--color-leaf-light), var(--color-leaf));
+  border-radius: 88% 12% 82% 18%;
+  height: calc(42px * var(--leaf-scale, 1));
+  left: 108px;
+  position: absolute;
+  top: 48px;
+  transform: rotate(calc(-34deg + var(--leaf-droop))) translateY(var(--leaf-drop));
+  transform-origin: left bottom;
+  width: 70px;
+  z-index: 7;
+}
+
+.stage-seedling .plant-leaf.third,
+.stage-seedling .plant-leaf.fourth,
+.stage-young .plant-leaf.fourth {
+  opacity: 0;
+}
+
+.plant-leaf.second {
+  animation-delay: 180ms;
+  border-radius: 12% 88% 18% 82%;
+  left: 30px;
+  top: 74px;
+  transform: rotate(calc(214deg - var(--leaf-droop))) translateY(var(--leaf-drop));
+}
+
+.plant-seed {
+  background:
+    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.36), transparent 24%),
+    linear-gradient(135deg, #a9682a, #704017);
+  border-radius: 52% 48% 48% 52%;
+  bottom: 46px;
+  height: 22px;
+  left: 94px;
+  opacity: var(--stage-opacity-seed, 0);
+  position: absolute;
+  transform: rotate(-18deg);
+  transition: opacity 500ms ease;
+  width: 18px;
+  z-index: 4;
+}
+
+.plant-root {
+  background: rgba(244, 218, 164, 0.72);
+  border-radius: 999px;
+  bottom: 22px;
+  height: 3px;
+  left: 102px;
+  opacity: 0.58;
+  position: absolute;
+  transform-origin: left center;
+  width: 42px;
+  z-index: 1;
+}
+
+.root-one {
+  transform: rotate(24deg);
+}
+
+.root-two {
+  transform: rotate(154deg);
+  width: 34px;
+}
+
+.plant-leaf.third {
+  animation-delay: 340ms;
+  height: calc(34px * var(--leaf-scale, 1));
+  left: 107px;
+  top: 88px;
+  transform: rotate(calc(26deg + var(--leaf-droop))) translateY(var(--leaf-drop));
+  width: 58px;
+}
+
+.plant-leaf.fourth {
+  animation-delay: 520ms;
+  border-radius: 12% 88% 18% 82%;
+  height: calc(34px * var(--leaf-scale, 1));
+  left: 48px;
+  top: 104px;
+  transform: rotate(calc(206deg - var(--leaf-droop))) translateY(var(--leaf-drop));
+  width: 58px;
+}
+
+.plant-visual.is-dry {
+  --leaf-droop: 28deg;
+  --leaf-drop: 9px;
+}
+
+.plant-visual.is-overwatered {
+  --leaf-droop: 18deg;
+  --leaf-drop: 7px;
+}
+
+.plant-visual.is-critical {
+  --leaf-droop: 42deg;
+  --leaf-drop: 14px;
+}
+
+.plant-visual.is-dry .plant-leaf,
+.plant-visual.is-overwatered .plant-leaf,
+.plant-visual.is-critical .plant-leaf {
+  animation: leaf-tremble 1.9s ease-in-out infinite;
+  filter: saturate(0.72);
+}
+
+.plant-visual.is-critical .plant-leaf.third,
+.plant-visual.is-critical .plant-leaf.fourth {
+  opacity: 0.58;
+}
+
+.leaf-spot {
+  background: rgba(108, 71, 29, 0.65);
+  border-radius: 999px;
+  height: 7px;
+  position: absolute;
+  width: 7px;
+  z-index: 4;
+}
+
+.falling-leaf {
+  animation: leaf-fall 3.2s ease-in-out infinite;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.14), transparent 35%),
+    linear-gradient(135deg, #e2cf55, #9a7730);
+  border-radius: 999px 0 999px 0;
+  height: 20px;
+  left: 122px;
+  opacity: 0;
+  position: absolute;
+  top: 82px;
+  transform-origin: center;
+  width: 28px;
+  z-index: 5;
+}
+
+.fall-two {
+  animation-delay: 980ms;
+  left: 62px;
+  top: 104px;
+}
+
+.fall-three {
+  animation-delay: 1.7s;
+  left: 142px;
+  top: 114px;
+}
+
+.spot-one {
+  left: 134px;
+  top: 62px;
+}
+
+.spot-two {
+  left: 62px;
+  top: 84px;
+}
+
+.spot-three {
+  left: 122px;
+  top: 104px;
+}
+
+.plant-pot-rim {
+  background:
+    radial-gradient(ellipse at 50% 20%, rgba(255, 255, 255, 0.16), transparent 38%),
+    linear-gradient(180deg, #8b5a2b, #5a361b);
+  border-radius: 999px;
+  bottom: 48px;
+  box-shadow: 0 8px 16px rgba(51, 31, 14, 0.16);
+  height: 20px;
+  left: 34px;
+  position: absolute;
+  width: 142px;
+  z-index: 3;
+}
+
+.plant-flower {
+  background:
+    radial-gradient(circle, #f8c8dc 0 34%, transparent 36%),
+    conic-gradient(from 30deg, #e85d9d, #f4a7c8, #e85d9d, #f4a7c8, #e85d9d);
+  border-radius: 50%;
+  height: 28px;
+  left: 132px;
+  opacity: var(--stage-opacity-flower, 0);
+  position: absolute;
+  top: 34px;
+  transform: rotate(18deg) scale(var(--leaf-scale, 1));
+  transition: opacity 500ms ease;
+  width: 28px;
+  z-index: 8;
+}
+
+.flower-two {
+  height: 22px;
+  left: 54px;
+  top: 66px;
+  transform: rotate(-16deg) scale(var(--leaf-scale, 1));
+  width: 22px;
+}
+
+.plant-visual.is-dry .plant-flower,
+.plant-visual.is-critical .plant-flower,
+.plant-visual.is-diseased .plant-flower {
+  filter: saturate(0.55);
+  opacity: calc(var(--stage-opacity-flower, 0) * 0.35);
+}
+
+.plant-shadow {
+  background: rgba(31, 42, 68, 0.12);
+  border-radius: 999px;
+  bottom: 18px;
+  filter: blur(5px);
+  height: 20px;
+  left: 36px;
+  position: absolute;
+  width: 138px;
+  z-index: 2;
+}
+
+.form-range {
+  appearance: none;
+  background: linear-gradient(
+    90deg,
+    var(--color-primary) var(--range-progress, 14%),
+    var(--color-surface-soft) var(--range-progress, 14%)
+  );
+  border-radius: 999px;
+  height: 10px;
+  outline: none;
+}
+
+.form-range::-webkit-slider-thumb {
+  appearance: none;
+  background: #ffffff;
+  border: 3px solid var(--color-primary);
+  border-radius: 50%;
+  box-shadow: var(--shadow-soft);
+  height: 24px;
+  width: 24px;
+}
+
+.form-range::-moz-range-thumb {
+  background: #ffffff;
+  border: 3px solid var(--color-primary);
+  border-radius: 50%;
+  box-shadow: var(--shadow-soft);
+  height: 20px;
+  width: 20px;
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes grow-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes soft-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes stem-sway {
+  0%,
+  100% {
+    transform: translateX(-50%) rotate(calc(var(--plant-sway) * -1));
+  }
+
+  50% {
+    transform: translateX(-50%) rotate(var(--plant-sway));
+  }
+}
+
+@keyframes leaf-breathe {
+  0%,
+  100% {
+    scale: 1;
+  }
+
+  50% {
+    scale: 1.045;
+  }
+}
+
+@keyframes leaf-tremble {
+  0%,
+  100% {
+    margin-top: 0;
+  }
+
+  50% {
+    margin-top: 3px;
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 220% 0;
+  }
+
+  to {
+    background-position: -220% 0;
+  }
+}
+
+@keyframes rain-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-18px);
+  }
+
+  30% {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(72px);
+  }
+}
+
+@keyframes leaf-fall {
+  0% {
+    opacity: 0;
+    transform: translate(0, -6px) rotate(0deg);
+  }
+
+  16% {
+    opacity: 0.95;
+  }
+
+  70% {
+    opacity: 0.85;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-28px, 96px) rotate(168deg);
+  }
+}
+
+@keyframes sun-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+@keyframes svg-plant-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes svg-stem-sway {
+  0%,
+  100% {
+    transform: rotate(calc(var(--plant-sway) * -1));
+  }
+
+  50% {
+    transform: rotate(var(--plant-sway));
+  }
+}
+
+@keyframes svg-leaf-breathe {
+  0%,
+  100% {
+    scale: var(--leaf-scale);
+  }
+
+  50% {
+    scale: calc(var(--leaf-scale) + 0.04);
+  }
+}
+
+@keyframes svg-node-breathe {
+  0%,
+  100% {
+    scale: 1;
+  }
+
+  50% {
+    scale: 1.025;
+  }
+}
+
+@keyframes svg-leaf-fall {
+  0% {
+    opacity: 0;
+    transform: translate(0, -8px) rotate(0deg);
+  }
+
+  18% {
+    opacity: 0.95;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-28px, 78px) rotate(150deg);
+  }
+}
+
+@keyframes flower-pop {
+  0%,
+  100% {
+    scale: 1;
+  }
+
+  50% {
+    scale: 1.12;
+  }
+}
